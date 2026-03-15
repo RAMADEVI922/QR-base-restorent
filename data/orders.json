@@ -1,54 +1,74 @@
-<<<<<<< HEAD
-[]
-=======
-<<<<<<< HEAD
-[]
-=======
-<<<<<<< HEAD
-[]
-=======
 [
   {
-    "id": "order-1",
-    "tableId": "table-1",
-    "status": "served",
-    "totalPrice": 1000,
-    "createdAt": 1773556824277,
-    "updatedAt": 1773556825277,
+    "id": "9f28093c-eafd-421e-92bb-c31d31bc5501",
+    "tableId": "496fedf0-e453-44f6-ae4f-1d3821ce1bef",
+    "items": [
+      {
+        "menuItemId": "{$nw$}%OV\"$",
+        "name": "?&~^s\"",
+        "quantity": 7,
+        "price": 103
+      }
+    ],
+    "status": "pending",
+    "totalPrice": 721,
+    "createdAt": 1773567329465,
+    "updatedAt": 1773567329465,
     "completedAt": null,
     "previousOrderId": null
   },
   {
-    "id": "order-2",
-    "tableId": "table-2",
-    "status": "served",
-    "totalPrice": 2000,
-    "createdAt": 1773556824277,
-    "updatedAt": 1773556825277,
+    "id": "036946d9-be48-47cf-aba5-2f5d4faf351b",
+    "tableId": "496fedf0-e453-44f6-ae4f-1d3821ce1bef",
+    "items": [
+      {
+        "menuItemId": "{$nw$}%OV\"$",
+        "name": "?&~^s\"",
+        "quantity": 7,
+        "price": 103
+      }
+    ],
+    "status": "pending",
+    "totalPrice": 721,
+    "createdAt": 1773567329467,
+    "updatedAt": 1773567329467,
     "completedAt": null,
     "previousOrderId": null
   },
   {
-    "id": "817564c4-ab34-4180-a9e1-34003db40432",
-    "tableId": "table-1",
+    "id": "dfa39fcf-812b-463d-96c1-6a2bfde9f937",
+    "tableId": "23866e4f-cf62-47cb-a2d7-7950b0b4a82c",
+    "items": [
+      {
+        "menuItemId": "{$nw$}%OV\"$",
+        "name": "?&~^s\"",
+        "quantity": 7,
+        "price": 103
+      }
+    ],
     "status": "pending",
-    "totalPrice": 0,
-    "createdAt": 1773556825279,
-    "updatedAt": 1773556825279,
+    "totalPrice": 721,
+    "createdAt": 1773567329469,
+    "updatedAt": 1773567329469,
     "completedAt": null,
-    "previousOrderId": "order-1"
+    "previousOrderId": null
   },
   {
-    "id": "dacca451-f1a4-42fa-8e10-cd7a09145fb0",
-    "tableId": "table-2",
+    "id": "2f8e694a-ee22-4120-8d1f-3618cc37da23",
+    "tableId": "23866e4f-cf62-47cb-a2d7-7950b0b4a82c",
+    "items": [
+      {
+        "menuItemId": "{$nw$}%OV\"$",
+        "name": "?&~^s\"",
+        "quantity": 7,
+        "price": 103
+      }
+    ],
     "status": "pending",
-    "totalPrice": 0,
-    "createdAt": 1773556825283,
-    "updatedAt": 1773556825283,
+    "totalPrice": 721,
+    "createdAt": 1773567329470,
+    "updatedAt": 1773567329470,
     "completedAt": null,
-    "previousOrderId": "order-2"
+    "previousOrderId": null
   }
 ]
->>>>>>> 5c6b155cf057d887ada991e63b455f6fafd48030
->>>>>>> 8c3d6db588ef75ccb15642d4e3c78d5909b53454
->>>>>>> a99d6073e7b553ddcd22b6f2d3660391c9759312

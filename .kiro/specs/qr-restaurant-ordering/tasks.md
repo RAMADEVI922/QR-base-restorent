@@ -528,13 +528,13 @@ This implementation plan breaks down the QR-based restaurant ordering system int
     - Test connection recovery
     - _Requirements: 4.2, 7.4, 9.5_
 
-- [ ] 28. Checkpoint - All tests passing
+- [x] 28. Checkpoint - All tests passing
   - Ensure all unit tests pass
   - Ensure all property tests pass
   - Ensure all integration tests pass
   - Ask the user if questions arise
 
-- [ ] 29. Create system documentation
+- [-] 29. Create system documentation
   - [ ] 29.1 Create API documentation
     - Document all endpoints
     - Document request/response formats
