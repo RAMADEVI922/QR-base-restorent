@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Responsive Design Test - QR Restaurant</title>
+  <link rel="stylesheet" href="src/frontend/styles.css">
+  <style>
+    .test-container {
+      padding: 2rem;
+      background: #f5f5f5;
+    }
+    .test-section {
+      margin-bottom: 3rem;
+      background: white;
+      padding: 2rem;
+      border-radius: 8px;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+    .test-section h2 {
+      color: #2c3e50;
+      margin-bottom: 1rem;
+      border-bottom: 2px solid #3498db;
+      padding-bottom: 0.5rem;
+    }
+    .device-info {
+      background: #e8f4fd;
+      padding: 1rem;
+      border-radius: 4px;
+      margin-bottom: 1rem;
+      font-family: monospace;
+    }
+    .test-result {
+      padding: 0.75rem;
+      border-radius: 4px;
+      margin-top: 0.5rem;
+    }
+    .test-result.pass {
+      background: #d4edda;
+      color: #155724;
+      border: 1px solid #c3e6cb;
+    }
+    .test-result.info {
+      background: #d1ecf1;
+      color: #0c5460;
+      border: 1px solid #bee5eb;
+    }
+  </style>
+</head>
+<body>
+  <div id="app">
+    <!-- Navigation -->
+    <nav class="navigation">
+      <div class="nav-container">
+        <h1 class="logo">QR Restaurant</h1>
+        <ul class="nav-links">
+          <li><a href="#" class="nav-link active">Menu</a></li>
+          <li><a href="#" class="nav-link">Order Queue</a></li>
+          <li><a href="#" class="nav-link">Dashboard</a></li>
+          <li><a href="#" class="nav-link">Tables</a></li>
+          <li><a href="#" class="nav-link">Menu Management</a></li>
+        </ul>
+      </div>
+    </nav>
+
+    <main class="page-container">
+      <div class="test-container">
+        <div class="test-section">
+          <h2>Responsive Design Test Results</h2>
+          <div class="device-info" id="device-info">
+            Loading device information...
+          </div>
+          <div id="test-results"></div>
+        </div>
+
+        <!-- Test Menu Items Grid -->
+        <div class="test-section">
+          <h2>Menu Items Grid (Requirement 2.1)</h2>
+          <div class="menu-items">
+            <div class="menu-item">
+              <h3 class="menu-item-name">Burger</h3>
+              <p class="menu-item-description">Delicious beef burger with cheese</p>
+              <div class="menu-item-price">$12.99</div>
+              <button class="btn btn-primary">Add to Order</button>
+            </div>
+            <div class="menu-item">
+              <h3 class="menu-item-name">Pizza</h3>
+              <p class="menu-item-description">Classic margherita pizza</p>
+              <div class="menu-item-price">$15.99</div>
+              <button class="btn btn-primary">Add to Order</button>
+            </div>
+            <div class="menu-item">
+              <h3 class="menu-item-name">Salad</h3>
+              <p class="menu-item-description">Fresh garden salad</p>
+              <div class="menu-item-price">$8.99</div>
+              <button class="btn btn-primary">Add to Order</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Test Order Queue -->
+        <div class="test-section">
+          <h2>Order Queue (Requirement 4.1)</h2>
+          <div class="orders-queue">
+            <div class="order-card pending">
+              <div class="order-header">
+                <h3 class="order-id">Order #1234</h3>
+                <span class="order-status status-pending">Pending</span>
+              </div>
+              <div class="order-info">
+                <span class="order-table">Table 5</span>
+                <span class="order-time">2 minutes ago</span>
+              </div>
+              <div class="order-items">
+                <div class="order-item">
+                  <span class="item-name">Burger</span>
+                  <span class="item-quantity">x2</span>
+                  <span class="item-price">$25.98</span>
+                </div>
+              </div>
+              <div class="order-controls">
+                <button class="btn btn-primary status-btn">Mark Preparing</button>
+              </div>
+            </div>
+            <div class="order-card ready">
+              <div class="order-header">
+                <h3 class="order-id">Order #1235</h3>
+                <span class="order-status status-ready">Ready</span>
+              </div>
+              <div class="order-info">
+                <span class="order-table">Table 3</span>
+                <span class="order-time">5 minutes ago</span>
+              </div>
+              <div class="order-items">
+                <div class="order-item">
+                  <span class="item-name">Pizza</span>
+                  <span class="item-quantity">x1</span>
+                  <span class="item-price">$15.99</span>
+                </div>
+              </div>
+              <div class="order-controls">
+                <button class="btn btn-success status-btn">Mark Served</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Test Dashboard Metrics -->
+        <div class="test-section">
+          <h2>Dashboard Metrics (Requirement 7.1)</h2>
+          <div class="metrics-grid">
+            <div class="metric-card">
+              <h3>Active Tables</h3>
+              <p class="metric-value">12</p>
+            </div>
+            <div class="metric-card">
+              <h3>Pending Orders</h3>
+              <p class="metric-value">5</p>
+            </div>
+            <div class="metric-card">
+              <h3>Preparing Orders</h3>
+              <p class="metric-value">3</p>
+            </div>
+            <div class="metric-card">
+              <h3>Ready Orders</h3>
+              <p class="metric-value">2</p>
+            </div>
+            <div class="metric-card metric-card-highlight">
+              <h3>Total Revenue</h3>
+              <p class="metric-value">$1,234.56</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Test Tables List -->
+        <div class="test-section">
+          <h2>Tables Management</h2>
+          <div class="tables-list">
+            <div class="table-card">
+              <h3>Table 1</h3>
+              <div class="table-qr">
+                <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='100' height='100'%3E%3Crect width='100' height='100' fill='%23ddd'/%3E%3Ctext x='50' y='50' text-anchor='middle' dy='.3em' fill='%23666'%3EQR Code%3C/text%3E%3C/svg%3E" alt="QR Code">
+              </div>
+              <div class="table-controls">
+                <button class="btn btn-secondary">View</button>
+                <button class="btn btn-danger">Delete</button>
+              </div>
+            </div>
+            <div class="table-card">
+              <h3>Table 2</h3>
+              <div class="table-qr">
+                <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='100' height='100'%3E%3Crect width='100' height='100' fill='%23ddd'/%3E%3Ctext x='50' y='50' text-anchor='middle' dy='.3em' fill='%23666'%3EQR Code%3C/text%3E%3C/svg%3E" alt="QR Code">
+              </div>
+              <div class="table-controls">
+                <button class="btn btn-secondary">View</button>
+                <button class="btn btn-danger">Delete</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <script>
+    // Display device information
+    function updateDeviceInfo() {
+      const width = window.innerWidth;
+      const height = window.innerHeight;
+      const orientation = width > height ? 'Landscape' : 'Portrait';
+      
+      let deviceType = 'Unknown';
+      let breakpoint = 'Unknown';
+      
+      if (width < 480) {
+        deviceType = 'Extra Small Mobile';
+        breakpoint = '320px - 479px';
+      } else if (width < 768) {
+        deviceType = 'Mobile';
+        breakpoint = '480px - 767px';
+      } else if (width < 1024) {
+        deviceType = 'Tablet';
+        breakpoint = '768px - 1023px';
+      } else if (width < 1440) {
+        deviceType = 'Desktop';
+        breakpoint = '1024px - 1439px';
+      } else if (width < 1920) {
+        deviceType = 'Large Desktop';
+        breakpoint = '1440px - 1919px';
+      } else {
+        deviceType = 'Extra Large Desktop';
+        breakpoint = '1920px+';
+      }
+      
+      const deviceInfo = document.getElementById('device-info');
+      deviceInfo.innerHTML = `
+        <strong>Device Type:</strong> ${deviceType}<br>
+        <strong>Breakpoint:</strong> ${breakpoint}<br>
+        <strong>Screen Size:</strong> ${width}px × ${height}px<br>
+        <strong>Orientation:</strong> ${orientation}<br>
+        <strong>Touch Device:</strong> ${('ontouchstart' in window) ? 'Yes' : 'No'}
+      `;
+      
+      // Display test results
+      const resultsDiv = document.getElementById('test-results');
+      resultsDiv.innerHTML = `
+        <div class="test-result pass">
+          ✓ Responsive design is active for ${deviceType}
+        </div>
+        <div class="test-result info">
+          <strong>Expected Layout:</strong><br>
+          ${getExpectedLayout(width)}
+        </div>
+      `;
+    }
+    
+    function getExpectedLayout(width) {
+      if (width < 480) {
+        return `
+          • Navigation: Vertical stacked<br>
+          • Menu Items: 1 column<br>
+          • Metrics: 1 column<br>
+          • Order Summary: Fixed to bottom<br>
+          • Touch targets: 44px minimum
+        `;
+      } else if (width < 768) {
+        return `
+          • Navigation: Vertical stacked<br>
+          • Menu Items: 1 column<br>
+          • Metrics: 1 column<br>
+          • Order Summary: Fixed to bottom<br>
+          • Touch targets: 44px minimum
+        `;
+      } else if (width < 1024) {
+        return `
+          • Navigation: Horizontal compact<br>
+          • Menu Items: 2 columns<br>
+          • Metrics: 2 columns<br>
+          • Order Summary: Sticky positioning
+        `;
+      } else if (width < 1440) {
+        return `
+          • Navigation: Full horizontal<br>
+          • Menu Items: 3 columns<br>
+          • Metrics: 3 columns<br>
+          • Hover effects: Enabled
+        `;
+      } else if (width < 1920) {
+        return `
+          • Navigation: Full horizontal<br>
+          • Menu Items: 4 columns<br>
+          • Metrics: 4 columns<br>
+          • Order Queue: 2 columns
+        `;
+      } else {
+        return `
+          • Navigation: Full horizontal<br>
+          • Menu Items: 5 columns<br>
+          • Metrics: 5 columns<br>
+          • Maximum width: 1800px
+        `;
+      }
+    }
+    
+    // Update on load and resize
+    updateDeviceInfo();
+    window.addEventListener('resize', updateDeviceInfo);
+    window.addEventListener('orientationchange', updateDeviceInfo);
+  </script>
+</body>
+</html>

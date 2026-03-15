@@ -296,7 +296,7 @@ This implementation plan breaks down the QR-based restaurant ordering system int
     - Display confirmation message
     - Navigate to confirmation page
     - _Requirements: 3.1, 3.2, 3.3, 3.4_
-  
+   
   - [x] 16.4 Write unit tests for menu page
     - Test menu item display
     - Test item selection and removal
@@ -426,20 +426,20 @@ This implementation plan breaks down the QR-based restaurant ordering system int
     - Test real-time updates
     - _Requirements: 9.1, 9.2, 9.3, 9.5_
 
-- [ ] 21. Implement frontend API client
-  - [ ] 21.1 Create HTTP client for API calls
+- [x] 21. Implement frontend API client
+  - [x] 21.1 Create HTTP client for API calls
     - Implement GET, POST, PUT, DELETE methods
     - Handle error responses
     - Implement retry logic with exponential backoff
     - _Requirements: 10.1, 10.2_
   
-  - [ ] 21.2 Create WebSocket client for real-time updates
+  - [x] 21.2 Create WebSocket client for real-time updates
     - Implement WebSocket connection management
     - Implement reconnection logic
     - Implement event listeners for updates
     - _Requirements: 4.2, 7.4, 9.5_
 
-- [-] 22. Implement frontend styling and UI polish
+- [x] 22. Implement frontend styling and UI polish
   - [x] 22.1 Create CSS for all pages
     - Style menu page for customer usability
     - Style order queue page for kitchen/waiter efficiency
@@ -447,7 +447,7 @@ This implementation plan breaks down the QR-based restaurant ordering system int
     - Style tables and menu management pages
     - _Requirements: 2.1, 4.1, 7.1, 8.1, 9.1_
   
-  - [-] 22.2 Implement responsive design
+  - [x] 22.2 Implement responsive design
     - Ensure pages work on mobile devices
     - Ensure pages work on tablets
     - Ensure pages work on desktop
