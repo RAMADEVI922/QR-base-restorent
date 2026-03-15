@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Responsive Design Test - QR Restaurant</title>
+  <link rel="stylesheet" href="src/frontend/styles.css">
+  <style>
+    .test-info {
+      position: fixed;
+      top: 10px;
+      right: 10px;
+      background: rgba(0, 0, 0, 0.8);
+      color: white;
+      padding: 10px;
+      border-radius: 4px;
+      font-size: 12px;
+      z-index: 9999;
+    }
+  </style>
+</head>
+<body>
+  <div class="test-info">
+    Screen: <span id="screen-width"></span>px
+  </div>
+
+  <div id="app">
+    <!-- Navigation -->
+    <nav id="navigation" class="navigation">
+      <div class="nav-container">
+        <h1 class="logo">QR Restaurant</h1>
+        <ul class="nav-links">
+          <li><a href="#" class="nav-link active">Menu</a></li>
+          <li><a href="#" class="nav-link">Order Queue</a></li>
+          <li><a href="#" class="nav-link">Dashboard</a></li>
+          <li><a href="#" class="nav-link">Tables</a></li>
+          <li><a href="#" class="nav-link">Menu Management</a></li>
+        </ul>
+      </div>
+    </nav>
+
+    <!-- Page Container -->
+    <main class="page-container">
+      <header class="page-header">
+        <h2>Menu</h2>
+        <p class="page-description">Select items to add to your order</p>
+        <p class="table-info">Table 5</p>
+      </header>
+
+      <!-- Menu Items Grid -->
+      <div class="menu-items">
+        <div class="menu-item">
+          <div class="menu-item-content">
+            <div class="menu-item-header">
+              <h3 class="menu-item-name">Margherita Pizza</h3>
+              <span class="menu-item-price">$12.99</span>
+            </div>
+            <p class="menu-item-description">Fresh mozzarella, tomato sauce, and basil</p>
+          </div>
+          <div class="menu-item-actions">
+            <button class="add-to-order-btn">Add to Order</button>
+          </div>
+        </div>
+
+        <div class="menu-item">
+          <div class="menu-item-content">
+            <div class="menu-item-header">
+              <h3 class="menu-item-name">Caesar Salad</h3>
+              <span class="menu-item-price">$8.99</span>
+            </div>
+            <p class="menu-item-description">Romaine lettuce, parmesan, croutons, Caesar dressing</p>
+          </div>
+          <div class="menu-item-actions">
+            <button class="add-to-order-btn">Add to Order</button>
+          </div>
+        </div>
+
+        <div class="menu-item">
+          <div class="menu-item-content">
+            <div class="menu-item-header">
+              <h3 class="menu-item-name">Grilled Salmon</h3>
+              <span class="menu-item-price">$18.99</span>
+            </div>
+            <p class="menu-item-description">Fresh Atlantic salmon with seasonal vegetables</p>
+          </div>
+          <div class="menu-item-actions">
+            <button class="add-to-order-btn">Add to Order</button>
+          </div>
+        </div>
+
+        <div class="menu-item">
+          <div class="menu-item-content">
+            <div class="menu-item-header">
+              <h3 class="menu-item-name">Pasta Carbonara</h3>
+              <span class="menu-item-price">$14.99</span>
+            </div>
+            <p class="menu-item-description">Creamy pasta with bacon and parmesan</p>
+          </div>
+          <div class="menu-item-actions">
+            <button class="add-to-order-btn">Add to Order</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Order Summary -->
+      <aside class="order-summary">
+        <h3>Your Order</h3>
+        <div id="summary-items" class="summary-items">
+          <div class="summary-item">
+            <span class="summary-item-name">Margherita Pizza x1</span>
+            <span class="summary-item-price">$12.99</span>
+          </div>
+          <div class="summary-item">
+            <span class="summary-item-name">Caesar Salad x1</span>
+            <span class="summary-item-price">$8.99</span>
+          </div>
+        </div>
+        <div class="summary-total">
+          <strong>Total: $<span id="total-price">21.98</span></strong>
+        </div>
+        <button class="btn btn-primary">Submit Order</button>
+      </aside>
+    </main>
+  </div>
+
+  <script>
+    function updateScreenWidth() {
+      document.getElementById('screen-width').textContent = window.innerWidth;
+    }
+    updateScreenWidth();
+    window.addEventListener('resize', updateScreenWidth);
+  </script>
+</body>
+</html>

@@ -439,15 +439,15 @@ This implementation plan breaks down the QR-based restaurant ordering system int
     - Implement event listeners for updates
     - _Requirements: 4.2, 7.4, 9.5_
 
-- [ ] 22. Implement frontend styling and UI polish
-  - [ ] 22.1 Create CSS for all pages
+- [-] 22. Implement frontend styling and UI polish
+  - [x] 22.1 Create CSS for all pages
     - Style menu page for customer usability
     - Style order queue page for kitchen/waiter efficiency
     - Style dashboard for manager overview
     - Style tables and menu management pages
     - _Requirements: 2.1, 4.1, 7.1, 8.1, 9.1_
   
-  - [ ] 22.2 Implement responsive design
+  - [-] 22.2 Implement responsive design
     - Ensure pages work on mobile devices
     - Ensure pages work on tablets
     - Ensure pages work on desktop
