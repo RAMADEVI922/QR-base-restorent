@@ -1,0 +1,32 @@
+{
+  "name": "qr-restaurant-ordering",
+  "version": "1.0.0",
+  "description": "QR-Based Restaurant Ordering System",
+  "main": "src/backend/server.js",
+  "type": "module",
+  "scripts": {
+    "start": "node src/backend/server.js",
+    "dev": "node --watch src/backend/server.js",
+    "test": "vitest",
+    "test:run": "vitest --run"
+  },
+  "keywords": [
+    "restaurant",
+    "ordering",
+    "qr-code"
+  ],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.18.2",
+    "qrcode": "^1.5.3",
+    "uuid": "^9.0.1",
+    "ws": "^8.19.0"
+  },
+  "devDependencies": {
+    "fast-check": "^3.14.0",
+    "jsdom": "^28.1.0",
+    "supertest": "^7.2.2",
+    "vitest": "^1.0.0"
+  }
+}

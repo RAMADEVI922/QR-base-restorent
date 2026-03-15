@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>QR Restaurant Ordering System</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div id="app">
+    <!-- Navigation Hub (Req 11.1, 11.4) -->
+    <nav id="navigation" class="navigation" role="navigation" aria-label="Main navigation">
+      <div class="nav-container">
+        <h1 class="logo">QR Restaurant</h1>
+        <ul class="nav-links" role="menubar">
+          <li role="none"><a href="#" data-page="menu" class="nav-link" role="menuitem" data-role="customer">Menu</a></li>
+          <li role="none"><a href="#" data-page="queue" class="nav-link" role="menuitem" data-role="kitchen,waiter">Order Queue</a></li>
+          <li role="none"><a href="#" data-page="dashboard" class="nav-link" role="menuitem" data-role="manager">Dashboard</a></li>
+          <li role="none"><a href="#" data-page="tables" class="nav-link" role="menuitem" data-role="manager">Tables</a></li>
+          <li role="none"><a href="#" data-page="menu-management" class="nav-link" role="menuitem" data-role="manager">Menu Management</a></li>
+        </ul>
+      </div>
+    </nav>
+
+    <!-- Page Container -->
+    <main id="page-container" class="page-container" role="main">
+      <!-- Menu Page (Customer-Facing) -->
+      <section id="menu-page" class="page hidden" aria-labelledby="menu-page-title">
+        <header class="page-header">
+          <h2 id="menu-page-title">Menu</h2>
+          <p id="table-info" class="table-info" aria-live="polite"></p>
+        </header>
+        
+        <!-- Menu Items Display -->
+        <div id="menu-items" class="menu-items" role="list" aria-label="Available menu items"></div>
+        
+        <!-- Order Summary Section -->
+        <aside id="order-summary" class="order-summary" aria-labelledby="order-summary-title">
+          <h3 id="order-summary-title">Your Order</h3>
+          <div id="summary-items" class="summary-items" role="list" aria-label="Selected items"></div>
+          <div class="summary-total" aria-live="polite">
+            <strong>Total: $<span id="total-price">0.00</span></strong>
+          </div>
+          <button id="submit-order" class="btn btn-primary" aria-label="Submit your order">Submit Order</button>
+        </aside>
+      </section>
+
+      <!-- Order Queue Page (Kitchen/Waiter) -->
+      <section id="queue-page" class="page hidden" aria-labelledby="queue-page-title">
+        <header class="page-header">
+          <h2 id="queue-page-title">Order Queue</h2>
+          <p class="page-description">Active orders awaiting preparation and service</p>
+        </header>
+        
+        <!-- Order Queue List -->
+        <div id="orders-queue" class="orders-queue" role="list" aria-label="Active orders" aria-live="polite"></div>
+        
+        <!-- Empty State -->
+        <div id="queue-empty" class="empty-state hidden" role="status">
+          <p>No active orders at the moment</p>
+        </div>
+      </section>
+
+      <!-- Dashboard Page (Manager) -->
+      <section id="dashboard-page" class="page hidden" aria-labelledby="dashboard-page-title">
+        <header class="page-header">
+          <h2 id="dashboard-page-title">Dashboard</h2>
+          <p class="page-description">Real-time system overview and metrics</p>
+        </header>
+        
+        <!-- Metrics Display -->
+        <div class="metrics-grid" role="region" aria-label="System metrics">
+          <article class="metric-card" aria-labelledby="metric-tables-title">
+            <h3 id="metric-tables-title">Active Tables</h3>
+            <p id="active-tables-count" class="metric-value" aria-live="polite">0</p>
+          </article>
+          
+          <article class="metric-card" aria-labelledby="metric-pending-title">
+            <h3 id="metric-pending-title">Pending Orders</h3>
+            <p id="pending-orders-count" class="metric-value" aria-live="polite">0</p>
+          </article>
+          
+          <article class="metric-card" aria-labelledby="metric-preparing-title">
+            <h3 id="metric-preparing-title">Preparing Orders</h3>
+            <p id="preparing-orders-count" class="metric-value" aria-live="polite">0</p>
+          </article>
+          
+          <article class="metric-card" aria-labelledby="metric-ready-title">
+            <h3 id="metric-ready-title">Ready Orders</h3>
+            <p id="ready-orders-count" class="metric-value" aria-live="polite">0</p>
+          </article>
+          
+          <article class="metric-card" aria-labelledby="metric-served-title">
+            <h3 id="metric-served-title">Served Orders</h3>
+            <p id="served-orders-count" class="metric-value" aria-live="polite">0</p>
+          </article>
+          
+          <article class="metric-card metric-card-highlight" aria-labelledby="metric-revenue-title">
+            <h3 id="metric-revenue-title">Total Revenue</h3>
+            <p id="total-revenue" class="metric-value" aria-live="polite">$0.00</p>
+          </article>
+        </div>
+      </section>
+
+      <!-- Tables Management Page (Manager) -->
+      <section id="tables-page" class="page hidden" aria-labelledby="tables-page-title">
+        <header class="page-header">
+          <h2 id="tables-page-title">Tables Management</h2>
+          <p class="page-description">Manage restaurant tables and QR codes</p>
+        </header>
+        
+        <!-- Table Creation Form -->
+        <div class="action-bar">
+          <button id="create-table-btn" class="btn btn-primary" aria-label="Create a new table">
+            <span aria-hidden="true">+</span> Create New Table
+          </button>
+        </div>
+        
+        <!-- Tables List -->
+        <div id="tables-list" class="tables-list" role="list" aria-label="Restaurant tables"></div>
+        
+        <!-- Empty State -->
+        <div id="tables-empty" class="empty-state hidden" role="status">
+          <p>No tables configured yet. Create your first table to get started.</p>
+        </div>
+      </section>
+
+      <!-- Menu Management Page (Manager) -->
+      <section id="menu-management-page" class="page hidden" aria-labelledby="menu-management-page-title">
+        <header class="page-header">
+          <h2 id="menu-management-page-title">Menu Management</h2>
+          <p class="page-description">Manage menu items and availability</p>
+        </header>
+        
+        <!-- Menu Item Creation Form -->
+        <div class="action-bar">
+          <button id="create-menu-item-btn" class="btn btn-primary" aria-label="Add a new menu item">
+            <span aria-hidden="true">+</span> Add Menu Item
+          </button>
+        </div>
+        
+        <!-- Menu Items List -->
+        <div id="menu-management-list" class="menu-management-list" role="list" aria-label="Menu items"></div>
+        
+        <!-- Empty State -->
+        <div id="menu-management-empty" class="empty-state hidden" role="status">
+          <p>No menu items yet. Add your first item to get started.</p>
+        </div>
+      </section>
+
+      <!-- Order Confirmation Page (Customer) -->
+      <section id="confirmation-page" class="page hidden" aria-labelledby="confirmation-page-title">
+        <header class="page-header">
+          <h2 id="confirmation-page-title">Order Confirmed!</h2>
+          <p class="page-description">Your order has been successfully submitted</p>
+        </header>
+        
+        <!-- Order Confirmation Details -->
+        <div class="confirmation-content">
+          <div class="confirmation-success">
+            <div class="success-icon" aria-hidden="true">✓</div>
+            <h3 id="confirmation-order-id">Order #</h3>
+            <p class="confirmation-message">Your order has been sent to the kitchen and will be prepared shortly.</p>
+          </div>
+          
+          <!-- Order Summary -->
+          <div class="confirmation-order-summary">
+            <h4>Order Summary</h4>
+            <div id="confirmation-items" class="confirmation-items" role="list" aria-label="Ordered items"></div>
+            <div class="confirmation-total">
+              <strong>Total: $<span id="confirmation-total-price">0.00</span></strong>
+            </div>
+          </div>
+          
+          <!-- Action Buttons -->
+          <div class="confirmation-actions">
+            <button id="place-another-order" class="btn btn-primary">Place Another Order</button>
+            <button id="view-order-status" class="btn btn-secondary">View Order Status</button>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <!-- Modal Container for Forms -->
+    <div id="modal-overlay" class="modal-overlay hidden" role="dialog" aria-modal="true" aria-labelledby="modal-title">
+      <div class="modal-content">
+        <header class="modal-header">
+          <h3 id="modal-title"></h3>
+          <button id="modal-close" class="btn-close" aria-label="Close dialog">&times;</button>
+        </header>
+        <div id="modal-body" class="modal-body"></div>
+      </div>
+    </div>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>

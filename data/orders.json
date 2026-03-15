@@ -1,0 +1,46 @@
+[
+  {
+    "id": "order-1",
+    "tableId": "table-1",
+    "items": [],
+    "status": "served",
+    "totalPrice": 1000,
+    "createdAt": 1773552141547,
+    "updatedAt": 1773552142547,
+    "completedAt": null,
+    "previousOrderId": null
+  },
+  {
+    "id": "order-2",
+    "tableId": "table-2",
+    "items": [],
+    "status": "served",
+    "totalPrice": 2000,
+    "createdAt": 1773552141547,
+    "updatedAt": 1773552142547,
+    "completedAt": null,
+    "previousOrderId": null
+  },
+  {
+    "id": "76889995-9422-466d-9bb3-db19d04558d6",
+    "tableId": "table-1",
+    "items": [],
+    "status": "pending",
+    "totalPrice": 0,
+    "createdAt": 1773552142552,
+    "updatedAt": 1773552142552,
+    "completedAt": null,
+    "previousOrderId": "order-1"
+  },
+  {
+    "id": "4590da72-77eb-4f2b-bbff-17810c262e0c",
+    "tableId": "table-2",
+    "items": [],
+    "status": "pending",
+    "totalPrice": 0,
+    "createdAt": 1773552142557,
+    "updatedAt": 1773552142557,
+    "completedAt": null,
+    "previousOrderId": "order-2"
+  }
+]

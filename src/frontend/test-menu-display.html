@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Menu Display Test</title>
+  <style>
+    body { font-family: Arial, sans-serif; margin: 20px; }
+    .menu-items { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 1rem; }
+    .menu-item { border: 1px solid #ddd; padding: 1rem; border-radius: 8px; }
+    .menu-item-unavailable { opacity: 0.6; background: #f8f9fa; }
+    .menu-item-header { display: flex; justify-content: space-between; margin-bottom: 0.5rem; }
+    .menu-item-name { margin: 0; font-size: 1.2rem; }
+    .menu-item-price { font-weight: bold; color: green; }
+    .menu-item-description { color: #666; margin: 0.5rem 0; }
+    .menu-item-unavailable-text { color: red; font-style: italic; }
+    .add-to-order-btn { background: #007bff; color: white; border: none; padding: 0.5rem 1rem; border-radius: 4px; cursor: pointer; }
+    .add-to-order-btn:disabled { background: #ccc; cursor: not-allowed; }
+    .table-info { background: #e8f4fd; padding: 0.75rem; border-radius: 6px; margin-bottom: 1rem; }
+    .error-state { background: #fff5f5; border: 1px solid #fed7d7; padding: 2rem; text-align: center; color: #c53030; border-radius: 8px; }
+  </style>
+</head>
+<body>
+  <h1>Menu Display Controller Test</h1>
+  
+  <div id="table-info" class="table-info"></div>
+  <div id="menu-items" class="menu-items"></div>
+  
+  <script type="module">
+    // Simple test of the MenuDisplayController
+    import MenuDisplayController from './src/frontend/menuDisplayController.js';
+    
+    const controller = new MenuDisplayController();
+    controller.init();
+    
+    // Set table context
+    controller.setTableContext('table-1');
+    
+    // Display menu items
+    controller.displayMenuItems().then(() => {
+      console.log('Menu items loaded successfully');
+    }).catch(error => {
+      console.error('Error loading menu items:', error);
+    });
+    
+    // Listen for menu item selection events
+    document.addEventListener('menuItemSelected', (event) => {
+      console.log('Menu item selected:', event.detail);
+      alert(`Added ${event.detail.name} to order!`);
+    });
+  </script>
+</body>
+</html>
