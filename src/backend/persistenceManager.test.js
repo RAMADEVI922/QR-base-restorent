@@ -326,7 +326,9 @@ describe('Persistence Manager', () => {
       fs.mkdirSync(dataDir, { recursive: true });
       fs.writeFileSync(filePath, 'invalid json {', 'utf-8');
       
-      await expect(readTables()).rejects.toThrow('Failed to parse JSON');
+      // With new recovery mechanism, corrupted JSON returns empty array
+      const result = await readTables();
+      expect(result).toEqual([]);
     });
 
     it('should handle non-array JSON gracefully', async () => {
@@ -336,7 +338,9 @@ describe('Persistence Manager', () => {
       fs.mkdirSync(dataDir, { recursive: true });
       fs.writeFileSync(filePath, JSON.stringify({ id: 'table-1' }), 'utf-8');
       
-      await expect(readTables()).rejects.toThrow('expected array');
+      // With new recovery mechanism, non-array JSON returns empty array
+      const result = await readTables();
+      expect(result).toEqual([]);
     });
   });
 
