@@ -13,10 +13,11 @@ import { readOrders, writeOrders } from './persistenceManager.js';
  * Creates a new order with unique ID and table association
  * @param {string} tableId - The table ID to associate with the order
  * @param {Array} items - Array of order items (optional, defaults to empty)
+ * @param {string} previousOrderId - Optional ID of previous order for repeat orders
  * @returns {Promise<Object>} - The created order object
  * @throws {Error} - If tableId is invalid
  */
-export async function createOrder(tableId, items = []) {
+export async function createOrder(tableId, items = [], previousOrderId = null) {
   if (!tableId || typeof tableId !== 'string') {
     throw new Error('Invalid tableId: must be a non-empty string');
   }
@@ -36,7 +37,7 @@ export async function createOrder(tableId, items = []) {
     createdAt: now,
     updatedAt: now,
     completedAt: null,
-    previousOrderId: null
+    previousOrderId: previousOrderId || null
   };
 
   // Persist the new order
