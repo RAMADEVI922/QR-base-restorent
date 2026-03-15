@@ -1,1 +1,31 @@
+<<<<<<< HEAD
 []
+=======
+<<<<<<< HEAD
+[]
+=======
+[
+  {
+    "id": "27eccc35-a953-407f-8c02-ff0e0b707998",
+    "qrCode": "qr-code-1",
+    "status": "active",
+    "createdAt": 1773556820164,
+    "updatedAt": 1773556820164
+  },
+  {
+    "id": "30998cde-0bf2-4324-876d-113c8c5771c3",
+    "qrCode": "qr-code-2",
+    "status": "active",
+    "createdAt": 1773556820168,
+    "updatedAt": 1773556820168
+  },
+  {
+    "id": "4abe4cdc-6133-41ab-9b42-33134ef209fc",
+    "qrCode": "qr-code-3",
+    "status": "active",
+    "createdAt": 1773556820171,
+    "updatedAt": 1773556820171
+  }
+]
+>>>>>>> 5c6b155cf057d887ada991e63b455f6fafd48030
+>>>>>>> 8c3d6db588ef75ccb15642d4e3c78d5909b53454
