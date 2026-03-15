@@ -296,36 +296,36 @@ This implementation plan breaks down the QR-based restaurant ordering system int
     - Display confirmation message
     - Navigate to confirmation page
     - _Requirements: 3.1, 3.2, 3.3, 3.4_
-  
-  - [-] 16.4 Write unit tests for menu page
+   
+  - [x] 16.4 Write unit tests for menu page
     - Test menu item display
     - Test item selection and removal
     - Test order total calculation
     - Test order submission validation
     - _Requirements: 2.1, 2.2, 2.3, 2.4, 3.1_
 
-- [ ] 17. Implement order queue page functionality
-  - [ ] 17.1 Create queue display controller
+- [x] 17. Implement order queue page functionality
+  - [x] 17.1 Create queue display controller
     - Fetch active orders from API
     - Display orders sorted by submission time
     - Display table identifier for each order
     - Highlight "ready" orders
     - _Requirements: 4.1, 4.5, 5.1, 5.4_
   
-  - [ ] 17.2 Create status update controller
+  - [x] 17.2 Create status update controller
     - Implement status update buttons (preparing, ready, served, completed)
     - Send status updates to API
     - Update UI on successful status change
     - _Requirements: 4.3, 4.4, 5.2, 12.1, 12.2_
   
-  - [ ] 17.3 Create real-time queue updates handler
+  - [x] 17.3 Create real-time queue updates handler
     - Connect to WebSocket for real-time updates
     - Update queue when new orders arrive
     - Update queue when order status changes
     - Remove served/completed orders from queue
     - _Requirements: 4.2, 5.3, 12.3_
   
-  - [ ] 17.4 Write unit tests for order queue page
+  - [x] 17.4 Write unit tests for order queue page
     - Test queue display and sorting
     - Test status update functionality
     - Test real-time update handling
@@ -426,14 +426,14 @@ This implementation plan breaks down the QR-based restaurant ordering system int
     - Test real-time updates
     - _Requirements: 9.1, 9.2, 9.3, 9.5_
 
-- [ ] 21. Implement frontend API client
-  - [ ] 21.1 Create HTTP client for API calls
+- [x] 21. Implement frontend API client
+  - [x] 21.1 Create HTTP client for API calls
     - Implement GET, POST, PUT, DELETE methods
     - Handle error responses
     - Implement retry logic with exponential backoff
     - _Requirements: 10.1, 10.2_
   
-  - [ ] 21.2 Create WebSocket client for real-time updates
+  - [x] 21.2 Create WebSocket client for real-time updates
     - Implement WebSocket connection management
     - Implement reconnection logic
     - Implement event listeners for updates

@@ -21,9 +21,11 @@ describe('OrderBuilderController', () => {
       <!DOCTYPE html>
       <html>
         <body>
-          <div id="summary-items"></div>
-          <span id="total-price">0.00</span>
-          <button id="submit-order">Submit Order</button>
+          <div id="order-summary">
+            <div id="summary-items"></div>
+            <span id="total-price">0.00</span>
+            <button id="submit-order">Submit Order</button>
+          </div>
           <div id="confirmation-order-id"></div>
           <div id="confirmation-items"></div>
           <span id="confirmation-total-price">0.00</span>
@@ -402,6 +404,390 @@ describe('OrderBuilderController', () => {
 
     it('should handle normal text', () => {
       expect(controller.escapeHtml('Normal text')).toBe('Normal text');
+    });
+  });
+
+  describe('order total calculation requirements', () => {
+    it('should calculate order total correctly with multiple items (Requirement 3.1)', () => {
+      // Test various combinations of items and quantities
+      const testCases = [
+        {
+          items: [
+            { menuItemId: 'item-1', price: 1000, quantity: 1 }
+          ],
+          expectedTotal: 1000
+        },
+        {
+          items: [
+            { menuItemId: 'item-1', price: 1299, quantity: 2 },
+            { menuItemId: 'item-2', price: 599, quantity: 3 }
+          ],
+          expectedTotal: 4395 // (1299 * 2) + (599 * 3)
+        },
+        {
+          items: [
+            { menuItemId: 'item-1', price: 1599, quantity: 1 },
+            { menuItemId: 'item-2', price: 899, quantity: 2 },
+            { menuItemId: 'item-3', price: 299, quantity: 5 }
+          ],
+          expectedTotal: 4892 // 1599 + (899 * 2) + (299 * 5)
+        }
+      ];
+
+      testCases.forEach(({ items, expectedTotal }, index) => {
+        // Clear order for each test case
+        controller.clearOrder();
+        
+        // Add items to order
+        items.forEach(item => {
+          controller.addItemToOrder({
+            menuItemId: item.menuItemId,
+            name: `Test Item ${item.menuItemId}`,
+            price: item.price,
+            quantity: item.quantity
+          });
+        });
+
+        expect(controller.currentOrder.totalPrice).toBe(expectedTotal);
+        
+        // Verify display shows correct formatted total
+        const formattedTotal = (expectedTotal / 100).toFixed(2);
+        expect(controller.totalPriceElement.textContent).toBe(formattedTotal);
+      });
+    });
+
+    it('should update total when items are removed (Requirements 2.4, 3.1)', () => {
+      // Add multiple items
+      controller.addItemToOrder({
+        menuItemId: 'item-1',
+        name: 'Burger',
+        price: 1299,
+        quantity: 2
+      });
+      controller.addItemToOrder({
+        menuItemId: 'item-2',
+        name: 'Fries',
+        price: 599,
+        quantity: 3
+      });
+
+      expect(controller.currentOrder.totalPrice).toBe(4395); // (1299*2) + (599*3)
+
+      // Remove one quantity of item-1
+      controller.removeItemFromOrder('item-1', 1);
+      expect(controller.currentOrder.totalPrice).toBe(3096); // 1299 + (599*3)
+
+      // Remove all of item-2
+      controller.removeItemFromOrder('item-2');
+      expect(controller.currentOrder.totalPrice).toBe(1299); // 1299 only
+
+      // Remove remaining item
+      controller.removeItemFromOrder('item-1');
+      expect(controller.currentOrder.totalPrice).toBe(0);
+    });
+
+    it('should handle decimal precision correctly', () => {
+      // Test edge cases with pricing
+      controller.addItemToOrder({
+        menuItemId: 'item-1',
+        name: 'Test Item',
+        price: 1, // 1 cent
+        quantity: 1
+      });
+
+      expect(controller.currentOrder.totalPrice).toBe(1);
+      expect(controller.totalPriceElement.textContent).toBe('0.01');
+
+      controller.addItemToOrder({
+        menuItemId: 'item-2',
+        name: 'Another Item',
+        price: 99, // 99 cents
+        quantity: 1
+      });
+
+      expect(controller.currentOrder.totalPrice).toBe(100);
+      expect(controller.totalPriceElement.textContent).toBe('1.00');
+    });
+  });
+
+  describe('order submission validation requirements', () => {
+    it('should prevent submission of empty orders (Requirement 3.1)', async () => {
+      controller.setTableContext('table-1');
+      // Ensure order is empty
+      controller.clearOrder();
+
+      await controller.handleSubmitOrder();
+
+      // Should not make API call
+      expect(fetch).not.toHaveBeenCalled();
+      
+      // Should show error message
+      const errorElement = document.getElementById('order-error');
+      expect(errorElement).toBeTruthy();
+      expect(errorElement.textContent).toContain('Please add items to your order');
+    });
+
+    it('should validate table context before submission (Requirement 3.2)', async () => {
+      // Add items but no table context
+      controller.addItemToOrder({
+        menuItemId: 'item-1',
+        name: 'Test Item',
+        price: 1000,
+        quantity: 1
+      });
+
+      controller.setTableContext(null);
+
+      await controller.handleSubmitOrder();
+
+      // Should not make API call
+      expect(fetch).not.toHaveBeenCalled();
+      
+      // Should show error message
+      const errorElement = document.getElementById('order-error');
+      expect(errorElement).toBeTruthy();
+      expect(errorElement.textContent).toContain('Table information is missing');
+    });
+
+    it('should submit valid orders with correct data structure (Requirements 3.1, 3.2)', async () => {
+      controller.setTableContext('table-123');
+      
+      // Add multiple items
+      controller.addItemToOrder({
+        menuItemId: 'burger-1',
+        name: 'Classic Burger',
+        price: 1299,
+        quantity: 2
+      });
+      controller.addItemToOrder({
+        menuItemId: 'fries-1',
+        name: 'French Fries',
+        price: 599,
+        quantity: 1
+      });
+
+      const mockResponse = {
+        id: 'order-456',
+        status: 'pending',
+        items: [
+          { menuItemId: 'burger-1', name: 'Classic Burger', price: 1299, quantity: 2 },
+          { menuItemId: 'fries-1', name: 'French Fries', price: 599, quantity: 1 }
+        ],
+        totalPrice: 3197,
+        tableId: 'table-123'
+      };
+
+      fetch.mockResolvedValueOnce({
+        ok: true,
+        json: async () => mockResponse
+      });
+
+      await controller.handleSubmitOrder();
+
+      // Verify API call structure
+      expect(fetch).toHaveBeenCalledWith('/api/orders', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          tableId: 'table-123',
+          items: [
+            {
+              menuItemId: 'burger-1',
+              quantity: 2,
+              price: 1299,
+              name: 'Classic Burger'
+            },
+            {
+              menuItemId: 'fries-1',
+              quantity: 1,
+              price: 599,
+              name: 'French Fries'
+            }
+          ]
+        })
+      });
+    });
+
+    it('should handle submission errors gracefully', async () => {
+      controller.setTableContext('table-1');
+      controller.addItemToOrder({
+        menuItemId: 'item-1',
+        name: 'Test Item',
+        price: 1000,
+        quantity: 1
+      });
+
+      // Mock API error
+      fetch.mockResolvedValueOnce({
+        ok: false,
+        status: 400,
+        statusText: 'Bad Request',
+        json: async () => ({ message: 'Invalid order data' })
+      });
+
+      await controller.handleSubmitOrder();
+
+      // Order should not be cleared on error
+      expect(controller.currentOrder.items).toHaveLength(1);
+      
+      // Should show error message
+      const errorElement = document.getElementById('order-error');
+      expect(errorElement).toBeTruthy();
+      expect(errorElement.textContent).toContain('Failed to submit order');
+    });
+  });
+
+  describe('item selection and removal requirements', () => {
+    it('should handle item selection correctly (Requirement 2.3)', () => {
+      const testItems = [
+        {
+          menuItemId: 'pizza-1',
+          name: 'Margherita Pizza',
+          price: 1599,
+          quantity: 1
+        },
+        {
+          menuItemId: 'drink-1',
+          name: 'Coca Cola',
+          price: 299,
+          quantity: 3
+        }
+      ];
+
+      testItems.forEach(item => {
+        controller.addItemToOrder(item);
+      });
+
+      // Verify items are added correctly
+      expect(controller.currentOrder.items).toHaveLength(2);
+      expect(controller.currentOrder.items[0]).toEqual(testItems[0]);
+      expect(controller.currentOrder.items[1]).toEqual(testItems[1]);
+      
+      // Verify total is calculated
+      expect(controller.currentOrder.totalPrice).toBe(2496); // 1599 + (299 * 3)
+      
+      // Verify UI is updated
+      const container = controller.summaryItemsContainer;
+      expect(container.textContent).toContain('Margherita Pizza');
+      expect(container.textContent).toContain('Coca Cola');
+      expect(container.textContent).toContain('x1');
+      expect(container.textContent).toContain('x3');
+    });
+
+    it('should handle item removal correctly (Requirement 2.4)', () => {
+      // Add items first
+      controller.addItemToOrder({
+        menuItemId: 'item-1',
+        name: 'Test Item 1',
+        price: 1000,
+        quantity: 3
+      });
+      controller.addItemToOrder({
+        menuItemId: 'item-2',
+        name: 'Test Item 2',
+        price: 500,
+        quantity: 2
+      });
+
+      expect(controller.currentOrder.items).toHaveLength(2);
+      expect(controller.currentOrder.totalPrice).toBe(4000); // (1000*3) + (500*2)
+
+      // Test partial removal
+      controller.removeItemFromOrder('item-1', 1);
+      expect(controller.currentOrder.items[0].quantity).toBe(2);
+      expect(controller.currentOrder.totalPrice).toBe(3000); // (1000*2) + (500*2)
+
+      // Test complete removal
+      controller.removeItemFromOrder('item-2');
+      expect(controller.currentOrder.items).toHaveLength(1);
+      expect(controller.currentOrder.totalPrice).toBe(2000); // (1000*2)
+
+      // Verify UI is updated
+      const container = controller.summaryItemsContainer;
+      expect(container.textContent).toContain('Test Item 1');
+      expect(container.textContent).not.toContain('Test Item 2');
+    });
+
+    it('should update submit button state based on order contents', () => {
+      // Initially empty order
+      expect(controller.submitOrderButton.disabled).toBe(true);
+      expect(controller.submitOrderButton.textContent).toBe('Add items to order');
+
+      // Add item
+      controller.addItemToOrder({
+        menuItemId: 'item-1',
+        name: 'Test Item',
+        price: 1000,
+        quantity: 1
+      });
+
+      expect(controller.submitOrderButton.disabled).toBe(false);
+      expect(controller.submitOrderButton.textContent).toBe('Submit Order');
+
+      // Remove item
+      controller.removeItemFromOrder('item-1');
+
+      expect(controller.submitOrderButton.disabled).toBe(true);
+      expect(controller.submitOrderButton.textContent).toBe('Add items to order');
+    });
+  });
+
+  describe('integration scenarios', () => {
+    it('should handle complete order workflow', async () => {
+      // Set table context
+      controller.setTableContext('table-5');
+      
+      // Add multiple items
+      controller.addItemToOrder({
+        menuItemId: 'appetizer-1',
+        name: 'Garlic Bread',
+        price: 699,
+        quantity: 1
+      });
+      controller.addItemToOrder({
+        menuItemId: 'main-1',
+        name: 'Chicken Parmesan',
+        price: 1899,
+        quantity: 2
+      });
+      controller.addItemToOrder({
+        menuItemId: 'drink-1',
+        name: 'Iced Tea',
+        price: 299,
+        quantity: 3
+      });
+
+      // Verify order state
+      expect(controller.currentOrder.items).toHaveLength(3);
+      expect(controller.currentOrder.totalPrice).toBe(5394); // 699 + (1899*2) + (299*3)
+      expect(controller.getItemCount()).toBe(6); // 1 + 2 + 3
+      expect(controller.hasItems()).toBe(true);
+
+      // Mock successful submission
+      const mockResponse = {
+        id: 'order-789',
+        status: 'pending',
+        items: controller.currentOrder.items,
+        totalPrice: controller.currentOrder.totalPrice,
+        tableId: 'table-5'
+      };
+
+      fetch.mockResolvedValueOnce({
+        ok: true,
+        json: async () => mockResponse
+      });
+
+      // Submit order
+      await controller.handleSubmitOrder();
+
+      // Verify order is cleared after submission
+      expect(controller.currentOrder.items).toHaveLength(0);
+      expect(controller.currentOrder.totalPrice).toBe(0);
+      expect(controller.currentOrder.tableId).toBe('table-5'); // Table context preserved
+      expect(controller.hasItems()).toBe(false);
+
+      // Verify navigation was called
+      expect(global.window.navigationController.navigateTo).toHaveBeenCalledWith('confirmation', expect.any(Object));
     });
   });
 });

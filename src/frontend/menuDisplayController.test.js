@@ -311,4 +311,158 @@ describe('MenuDisplayController', () => {
       expect(controller.escapeHtml('Normal text')).toBe('Normal text');
     });
   });
+
+  describe('menu item display requirements', () => {
+    it('should display all required menu item information (Requirements 2.1, 2.2)', async () => {
+      const mockMenuItems = [
+        {
+          id: 'item-1',
+          name: 'Deluxe Burger',
+          description: 'A juicy beef burger with lettuce, tomato, and special sauce',
+          price: 1599,
+          available: true
+        },
+        {
+          id: 'item-2',
+          name: 'Veggie Pizza',
+          description: 'Fresh vegetables on a crispy crust',
+          price: 1299,
+          available: false
+        }
+      ];
+
+      fetch.mockResolvedValueOnce({
+        ok: true,
+        json: async () => mockMenuItems
+      });
+
+      await controller.displayMenuItems();
+
+      const container = controller.menuItemsContainer;
+      
+      // Check that all required information is displayed for available item
+      expect(container.textContent).toContain('Deluxe Burger');
+      expect(container.textContent).toContain('A juicy beef burger with lettuce, tomato, and special sauce');
+      expect(container.textContent).toContain('$15.99');
+      expect(container.textContent).toContain('Add to Order');
+      
+      // Check that unavailable item shows proper status
+      expect(container.textContent).toContain('Veggie Pizza');
+      expect(container.textContent).toContain('Fresh vegetables on a crispy crust');
+      expect(container.textContent).toContain('$12.99');
+      expect(container.textContent).toContain('Currently unavailable');
+      expect(container.textContent).toContain('Unavailable');
+      
+      // Verify button states
+      const availableButton = container.querySelector('[data-menu-item-id="item-1"] .add-to-order-btn');
+      const unavailableButton = container.querySelector('[data-menu-item-id="item-2"] .add-to-order-btn');
+      
+      expect(availableButton.disabled).toBe(false);
+      expect(unavailableButton.disabled).toBe(true);
+    });
+
+    it('should prevent selection of unavailable items (Requirement 2.5)', async () => {
+      const mockMenuItems = [
+        {
+          id: 'unavailable-item',
+          name: 'Out of Stock Item',
+          description: 'This item is not available',
+          price: 999,
+          available: false
+        }
+      ];
+
+      fetch.mockResolvedValueOnce({
+        ok: true,
+        json: async () => mockMenuItems
+      });
+
+      await controller.displayMenuItems();
+
+      let eventFired = false;
+      document.addEventListener('menuItemSelected', () => {
+        eventFired = true;
+      });
+
+      // Try to click the disabled button
+      const button = controller.menuItemsContainer.querySelector('.add-to-order-btn');
+      expect(button.disabled).toBe(true);
+      expect(button.getAttribute('aria-disabled')).toBe('true');
+      
+      // Simulate click on disabled button (should not fire event)
+      button.click();
+      
+      // Wait a bit to ensure no event is fired
+      await new Promise(resolve => setTimeout(resolve, 10));
+      expect(eventFired).toBe(false);
+    });
+
+    it('should handle price formatting correctly', () => {
+      const testCases = [
+        { price: 0, expected: '$0.00' },
+        { price: 1, expected: '$0.01' },
+        { price: 99, expected: '$0.99' },
+        { price: 100, expected: '$1.00' },
+        { price: 1599, expected: '$15.99' },
+        { price: 10000, expected: '$100.00' }
+      ];
+
+      testCases.forEach(({ price, expected }) => {
+        const menuItem = {
+          id: 'test-item',
+          name: 'Test Item',
+          description: 'Test Description',
+          price: price,
+          available: true
+        };
+
+        const element = controller.createMenuItemElement(menuItem);
+        expect(element.textContent).toContain(expected);
+      });
+    });
+  });
+
+  describe('real-time updates', () => {
+    it('should handle menu item availability changes (Requirement 9.5)', async () => {
+      // Setup initial menu items
+      const initialItems = [
+        {
+          id: 'item-1',
+          name: 'Test Item',
+          description: 'Test Description',
+          price: 1000,
+          available: true
+        }
+      ];
+
+      fetch.mockResolvedValueOnce({
+        ok: true,
+        json: async () => initialItems
+      });
+
+      await controller.displayMenuItems();
+
+      // Verify initial state
+      let button = controller.menuItemsContainer.querySelector('.add-to-order-btn');
+      expect(button.disabled).toBe(false);
+      expect(button.textContent.trim()).toBe('Add to Order');
+
+      // Update item to unavailable
+      const updatedItem = {
+        id: 'item-1',
+        name: 'Test Item',
+        description: 'Test Description',
+        price: 1000,
+        available: false
+      };
+
+      controller.handleMenuItemUpdate(updatedItem);
+
+      // Verify updated state
+      button = controller.menuItemsContainer.querySelector('.add-to-order-btn');
+      expect(button.disabled).toBe(true);
+      expect(button.textContent.trim()).toBe('Unavailable');
+      expect(controller.menuItemsContainer.textContent).toContain('Currently unavailable');
+    });
+  });
 });
