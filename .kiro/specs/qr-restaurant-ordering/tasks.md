@@ -510,19 +510,19 @@ This implementation plan breaks down the QR-based restaurant ordering system int
     - Document any failures
     - _Requirements: All_
 
-- [ ] 27. Implement integration tests
-  - [ ] 27.1 Create end-to-end workflow tests
+- [x] 27. Implement integration tests
+  - [x] 27.1 Create end-to-end workflow tests
     - Test complete customer order flow (QR scan → menu → order → queue)
     - Test kitchen workflow (queue → preparing → ready → served → completed)
     - Test manager workflows (dashboard, table management, menu management)
     - _Requirements: 1.1, 2.1, 3.1, 4.1, 5.1, 7.1, 8.1, 9.1_
   
-  - [ ] 27.2 Create repeat order workflow tests
+  - [x] 27.2 Create repeat order workflow tests
     - Test repeat order flow from same table
     - Verify order history is maintained
     - _Requirements: 6.1, 6.2, 6.3, 6.4, 6.5_
   
-  - [ ] 27.3 Create real-time update integration tests
+  - [x] 27.3 Create real-time update integration tests
     - Test WebSocket updates across multiple clients
     - Test fallback to polling
     - Test connection recovery

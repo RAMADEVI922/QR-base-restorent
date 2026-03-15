@@ -468,8 +468,8 @@ app.post('/api/orders', async (req, res) => {
       return res.status(400).json(dataValidator.createValidationErrorResponse(validation.errors));
     }
     
-    const { tableId, items } = sanitizedBody;
-    const order = await createOrder(tableId, items);
+    const { tableId, items, previousOrderId } = sanitizedBody;
+    const order = await createOrder(tableId, items, previousOrderId);
     
     // Broadcast new order creation to kitchen queue
     broadcastEvent('orderCreated', order);
@@ -482,6 +482,24 @@ app.post('/api/orders', async (req, res) => {
     console.error('Error creating order:', error);
     res.status(500).json({ 
       error: 'Failed to create order',
+      message: error.message 
+    });
+  }
+});
+
+/**
+ * GET /api/orders/queue - Get active orders sorted by time
+ * Requirements: 4.1, 4.2, 4.5, 5.4
+ * NOTE: This route must be defined BEFORE /api/orders/:id to avoid route conflicts
+ */
+app.get('/api/orders/queue', async (req, res) => {
+  try {
+    const queue = await getOrderQueue();
+    res.json(queue);
+  } catch (error) {
+    console.error('Error retrieving order queue:', error);
+    res.status(500).json({ 
+      error: 'Failed to retrieve order queue',
       message: error.message 
     });
   }
@@ -645,23 +663,6 @@ app.put('/api/orders/:id/status', async (req, res) => {
     console.error('Error updating order status:', error);
     res.status(500).json({ 
       error: 'Failed to update order status',
-      message: error.message 
-    });
-  }
-});
-
-/**
- * GET /api/orders/queue - Get active orders sorted by time
- * Requirements: 4.1, 4.2, 4.5, 5.4
- */
-app.get('/api/orders/queue', async (req, res) => {
-  try {
-    const queue = await getOrderQueue();
-    res.json(queue);
-  } catch (error) {
-    console.error('Error retrieving order queue:', error);
-    res.status(500).json({ 
-      error: 'Failed to retrieve order queue',
       message: error.message 
     });
   }
