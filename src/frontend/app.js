@@ -6,12 +6,14 @@
 import { NavigationController } from './navigationController.js';
 import MenuDisplayController from './menuDisplayController.js';
 import OrderBuilderController from './orderBuilderController.js';
+import OrderQueueController from './orderQueueController.js';
 
 class App {
   constructor() {
     this.navigationController = new NavigationController();
     this.menuDisplayController = new MenuDisplayController();
     this.orderBuilderController = new OrderBuilderController();
+    this.orderQueueController = new OrderQueueController();
     this.init();
   }
 
@@ -19,6 +21,7 @@ class App {
     this.navigationController.init();
     this.menuDisplayController.init();
     this.orderBuilderController.init();
+    this.orderQueueController.init();
     this.setupNavigationIntegration();
     this.setupOrderEventListeners();
     
@@ -238,42 +241,10 @@ class App {
 
   async loadQueuePage() {
     try {
-      const response = await fetch('/api/orders/queue');
-      const orders = await response.json();
-      this.renderQueue(orders);
+      await this.orderQueueController.loadQueue();
     } catch (error) {
       console.error('Error loading queue:', error);
     }
-  }
-
-  renderQueue(orders) {
-    const container = document.getElementById('orders-queue');
-    container.innerHTML = '';
-
-    orders.forEach(order => {
-      const orderElement = document.createElement('div');
-      orderElement.className = `order-card ${order.status === 'ready' ? 'ready' : ''}`;
-      
-      const itemsHtml = order.items.map(item => 
-        `<div class="order-item"><span>${item.name} x${item.quantity}</span></div>`
-      ).join('');
-
-      orderElement.innerHTML = `
-        <div class="order-header">
-          <span class="order-id">Order #${order.id}</span>
-          <span class="order-status ${order.status}">${order.status}</span>
-        </div>
-        <div class="order-table">Table: ${order.tableId}</div>
-        <div class="order-items">${itemsHtml}</div>
-        <div class="order-controls">
-          ${order.status === 'pending' ? `<button class="btn btn-primary" onclick="app.updateOrderStatus('${order.id}', 'preparing')">Start Preparing</button>` : ''}
-          ${order.status === 'preparing' ? `<button class="btn btn-primary" onclick="app.updateOrderStatus('${order.id}', 'ready')">Mark Ready</button>` : ''}
-          ${order.status === 'ready' ? `<button class="btn btn-primary" onclick="app.updateOrderStatus('${order.id}', 'served')">Mark Served</button>` : ''}
-          ${order.status === 'served' ? `<button class="btn btn-primary" onclick="app.updateOrderStatus('${order.id}', 'completed')">Mark Completed</button>` : ''}
-        </div>
-      `;
-      container.appendChild(orderElement);
-    });
   }
 
   async loadMenuManagementPage() {
@@ -311,21 +282,9 @@ class App {
     });
   }
   async updateOrderStatus(orderId, newStatus) {
-    try {
-      const response = await fetch(`/api/orders/${orderId}/status`, {
-        method: 'PUT',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ status: newStatus })
-      });
-
-      if (response.ok) {
-        this.loadQueuePage();
-      } else {
-        alert('Error updating order status');
-      }
-    } catch (error) {
-      console.error('Error updating order status:', error);
-    }
+    // This method is now handled by the OrderQueueController
+    // Keep for backward compatibility but delegate to the controller
+    console.warn('updateOrderStatus called on App - this should be handled by OrderQueueController');
   }
 
   printQRCode(tableId) {
@@ -381,6 +340,8 @@ class App {
 // Initialize app when DOM is ready
 document.addEventListener('DOMContentLoaded', () => {
   window.app = new App();
+  // Make orderQueueController globally accessible for HTML event handlers
+  window.orderQueueController = window.app.orderQueueController;
 });
 
 // Export for testing

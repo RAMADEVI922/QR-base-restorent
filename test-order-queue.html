@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Order Queue Test</title>
+</head>
+<body>
+    <h1>Order Queue Test</h1>
+    <p>Testing order queue functionality...</p>
+    <script>
+        // Test API endpoints
+        fetch('/api/orders/queue')
+            .then(response => response.json())
+            .then(data => {
+                console.log('Queue data:', data);
+                document.body.innerHTML += '<p>Queue loaded: ' + data.length + ' orders</p>';
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                document.body.innerHTML += '<p>Error loading queue</p>';
+            });
+    </script>
+</body>
+</html>
