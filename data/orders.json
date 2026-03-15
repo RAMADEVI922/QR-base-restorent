@@ -1,1 +1,46 @@
+<<<<<<< HEAD
 []
+=======
+[
+  {
+    "id": "order-1",
+    "tableId": "table-1",
+    "status": "served",
+    "totalPrice": 1000,
+    "createdAt": 1773556824277,
+    "updatedAt": 1773556825277,
+    "completedAt": null,
+    "previousOrderId": null
+  },
+  {
+    "id": "order-2",
+    "tableId": "table-2",
+    "status": "served",
+    "totalPrice": 2000,
+    "createdAt": 1773556824277,
+    "updatedAt": 1773556825277,
+    "completedAt": null,
+    "previousOrderId": null
+  },
+  {
+    "id": "817564c4-ab34-4180-a9e1-34003db40432",
+    "tableId": "table-1",
+    "status": "pending",
+    "totalPrice": 0,
+    "createdAt": 1773556825279,
+    "updatedAt": 1773556825279,
+    "completedAt": null,
+    "previousOrderId": "order-1"
+  },
+  {
+    "id": "dacca451-f1a4-42fa-8e10-cd7a09145fb0",
+    "tableId": "table-2",
+    "status": "pending",
+    "totalPrice": 0,
+    "createdAt": 1773556825283,
+    "updatedAt": 1773556825283,
+    "completedAt": null,
+    "previousOrderId": "order-2"
+  }
+]
+>>>>>>> 5c6b155cf057d887ada991e63b455f6fafd48030
