@@ -331,56 +331,56 @@ This implementation plan breaks down the QR-based restaurant ordering system int
     - Test real-time update handling
     - _Requirements: 4.1, 4.2, 4.3, 4.4, 4.5, 5.2, 5.3, 5.4_
 
-- [ ] 18. Implement dashboard page functionality
-  - [ ] 18.1 Create metrics display controller
+- [x] 18. Implement dashboard page functionality
+  - [x] 18.1 Create metrics display controller
     - Fetch metrics from API
     - Display active table count
     - Display order counts by status
     - Display total revenue
     - _Requirements: 7.1, 7.2, 7.3_
   
-  - [ ] 18.2 Create real-time metrics updates handler
+  - [x] 18.2 Create real-time metrics updates handler
     - Connect to WebSocket for real-time updates
     - Update metrics when orders change
     - Update metrics when tables change
     - _Requirements: 7.4_
   
-  - [ ] 18.3 Write unit tests for dashboard page
+  - [x] 18.3 Write unit tests for dashboard page
     - Test metrics display
     - Test real-time metric updates
     - _Requirements: 7.1, 7.2, 7.3, 7.4_
 
-- [ ] 19. Implement tables management page functionality
-  - [ ] 19.1 Create table list display controller
+- [x] 19. Implement tables management page functionality
+  - [x] 19.1 Create table list display controller
     - Fetch all tables from API
     - Display table identifiers
     - Display table status
     - _Requirements: 8.1_
   
-  - [ ] 19.2 Create table creation handler
+  - [x] 19.2 Create table creation handler
     - Display table creation form
     - Submit new table to API
     - Display generated QR code
     - _Requirements: 8.2_
   
-  - [ ] 19.3 Create table deletion handler
+  - [x] 19.3 Create table deletion handler
     - Implement delete button for each table
     - Send delete request to API
     - Update table list on successful deletion
     - _Requirements: 8.3_
   
-  - [ ] 19.4 Create QR code display and print handler
+  - [x] 19.4 Create QR code display and print handler
     - Display QR code for each table
     - Implement print functionality
     - Implement download functionality
     - _Requirements: 8.4_
   
-  - [ ] 19.5 Create table order history display
+  - [x] 19.5 Create table order history display
     - Fetch order history for selected table
     - Display all orders associated with table
     - _Requirements: 8.5_
   
-  - [ ] 19.6 Write unit tests for tables page
+  - [x] 19.6 Write unit tests for tables page
     - Test table list display
     - Test table creation
     - Test table deletion
@@ -388,37 +388,37 @@ This implementation plan breaks down the QR-based restaurant ordering system int
     - Test order history display
     - _Requirements: 8.1, 8.2, 8.3, 8.4, 8.5_
 
-- [ ] 20. Implement menu management page functionality
-  - [ ] 20.1 Create menu item list display controller
+- [x] 20. Implement menu management page functionality
+  - [x] 20.1 Create menu item list display controller
     - Fetch all menu items from API
     - Display items with name, description, price, availability
     - _Requirements: 9.1_
   
-  - [ ] 20.2 Create menu item creation handler
+  - [x] 20.2 Create menu item creation handler
     - Display menu item creation form
     - Validate form inputs
     - Submit new menu item to API
     - Update menu list on successful creation
     - _Requirements: 9.1_
   
-  - [ ] 20.3 Create menu item update handler
+  - [x] 20.3 Create menu item update handler
     - Display menu item edit form
     - Submit updates to API
     - Update menu list on successful update
     - _Requirements: 9.2_
   
-  - [ ] 20.4 Create availability toggle handler
+  - [x] 20.4 Create availability toggle handler
     - Implement toggle button for each item
     - Send availability update to API
     - Update UI on successful toggle
     - _Requirements: 9.3_
   
-  - [ ] 20.5 Create real-time menu updates handler
+  - [x] 20.5 Create real-time menu updates handler
     - Connect to WebSocket for menu updates
     - Update menu display when items change
     - _Requirements: 9.5_
   
-  - [ ] 20.6 Write unit tests for menu management page
+  - [x] 20.6 Write unit tests for menu management page
     - Test menu item display
     - Test menu item creation
     - Test menu item update

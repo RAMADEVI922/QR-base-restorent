@@ -7,6 +7,8 @@ import { NavigationController } from './navigationController.js';
 import MenuDisplayController from './menuDisplayController.js';
 import OrderBuilderController from './orderBuilderController.js';
 import OrderQueueController from './orderQueueController.js';
+import TablesController from './tablesController.js';
+import MenuManagementController from './menuManagementController.js';
 
 class App {
   constructor() {
@@ -14,6 +16,8 @@ class App {
     this.menuDisplayController = new MenuDisplayController();
     this.orderBuilderController = new OrderBuilderController();
     this.orderQueueController = new OrderQueueController();
+    this.tablesController = new TablesController();
+    this.menuManagementController = new MenuManagementController();
     this.init();
   }
 
@@ -22,6 +26,8 @@ class App {
     this.menuDisplayController.init();
     this.orderBuilderController.init();
     this.orderQueueController.init();
+    this.tablesController.init();
+    this.menuManagementController.init();
     this.setupNavigationIntegration();
     this.setupOrderEventListeners();
     
@@ -207,36 +213,14 @@ class App {
     }
     this.navigationController.navigateTo('menu');
   }
+
   async loadTablesPage() {
     try {
-      const response = await fetch('/api/tables');
-      const tables = await response.json();
-      this.renderTables(tables);
+      // Use the TablesController to display tables
+      await this.tablesController.displayTables();
     } catch (error) {
       console.error('Error loading tables:', error);
     }
-  }
-
-  renderTables(tables) {
-    const container = document.getElementById('tables-list');
-    container.innerHTML = '';
-
-    tables.forEach(table => {
-      const tableElement = document.createElement('div');
-      tableElement.className = 'table-card';
-      tableElement.innerHTML = `
-        <h3>Table ${table.id}</h3>
-        <p>Status: ${table.status}</p>
-        <div class="table-qr">
-          <img src="${table.qrCode}" alt="QR Code for Table ${table.id}">
-        </div>
-        <div class="table-controls">
-          <button class="btn btn-secondary" onclick="app.printQRCode('${table.id}')">Print</button>
-          <button class="btn btn-danger" onclick="app.deleteTable('${table.id}')">Delete</button>
-        </div>
-      `;
-      container.appendChild(tableElement);
-    });
   }
 
   async loadQueuePage() {
@@ -249,37 +233,11 @@ class App {
 
   async loadMenuManagementPage() {
     try {
-      const response = await fetch('/api/menu-items');
-      const menuItems = await response.json();
-      this.renderMenuManagement(menuItems);
+      // Use the MenuManagementController to display menu items
+      await this.menuManagementController.displayMenuItems();
     } catch (error) {
       console.error('Error loading menu management:', error);
     }
-  }
-
-  renderMenuManagement(menuItems) {
-    const container = document.getElementById('menu-management-list');
-    container.innerHTML = '';
-
-    menuItems.forEach(item => {
-      const itemElement = document.createElement('div');
-      itemElement.className = 'menu-management-item';
-      itemElement.innerHTML = `
-        <div class="menu-management-info">
-          <h3>${item.name}</h3>
-          <p>${item.description}</p>
-          <p>Price: ${(item.price / 100).toFixed(2)}</p>
-          <p>Status: ${item.available ? 'Available' : 'Unavailable'}</p>
-        </div>
-        <div class="menu-management-controls">
-          <button class="btn btn-secondary" onclick="app.toggleAvailability('${item.id}')">
-            ${item.available ? 'Disable' : 'Enable'}
-          </button>
-          <button class="btn btn-danger" onclick="app.deleteMenuItem('${item.id}')">Delete</button>
-        </div>
-      `;
-      container.appendChild(itemElement);
-    });
   }
   async updateOrderStatus(orderId, newStatus) {
     // This method is now handled by the OrderQueueController
@@ -287,54 +245,7 @@ class App {
     console.warn('updateOrderStatus called on App - this should be handled by OrderQueueController');
   }
 
-  printQRCode(tableId) {
-    alert(`Print QR code for table ${tableId}`);
-  }
 
-  async deleteTable(tableId) {
-    if (confirm('Are you sure you want to delete this table?')) {
-      try {
-        const response = await fetch(`/api/tables/${tableId}`, { method: 'DELETE' });
-        if (response.ok) {
-          this.loadTablesPage();
-        }
-      } catch (error) {
-        console.error('Error deleting table:', error);
-      }
-    }
-  }
-
-  async toggleAvailability(menuItemId) {
-    try {
-      const response = await fetch(`/api/menu-items/${menuItemId}`, { method: 'GET' });
-      const item = await response.json();
-      
-      const updateResponse = await fetch(`/api/menu-items/${menuItemId}`, {
-        method: 'PUT',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ ...item, available: !item.available })
-      });
-
-      if (updateResponse.ok) {
-        this.loadMenuManagementPage();
-      }
-    } catch (error) {
-      console.error('Error toggling availability:', error);
-    }
-  }
-
-  async deleteMenuItem(menuItemId) {
-    if (confirm('Are you sure you want to delete this menu item?')) {
-      try {
-        const response = await fetch(`/api/menu-items/${menuItemId}`, { method: 'DELETE' });
-        if (response.ok) {
-          this.loadMenuManagementPage();
-        }
-      } catch (error) {
-        console.error('Error deleting menu item:', error);
-      }
-    }
-  }
 }
 
 // Initialize app when DOM is ready

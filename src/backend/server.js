@@ -7,7 +7,8 @@ import {
   getAllTables, 
   getTableById, 
   updateTableStatus, 
-  deleteTable 
+  deleteTable,
+  getTableOrderHistory
 } from './tableService.js';
 import { generateQRCode } from './qrCodeGenerator.js';
 import {
@@ -190,6 +191,35 @@ app.put('/api/tables/:id', async (req, res) => {
     console.error('Error updating table:', error);
     res.status(500).json({ 
       error: 'Failed to update table',
+      message: error.message 
+    });
+  }
+});
+
+/**
+ * GET /api/tables/:id/orders - Get order history for a table
+ * Requirements: 8.5
+ */
+app.get('/api/tables/:id/orders', async (req, res) => {
+  try {
+    const { id } = req.params;
+    
+    // Check if table exists
+    const existingTable = await getTableById(id);
+    if (!existingTable) {
+      return res.status(404).json({ 
+        error: 'Table not found' 
+      });
+    }
+    
+    // Get order history for the table
+    const orders = await getTableOrderHistory(id);
+    
+    res.json(orders);
+  } catch (error) {
+    console.error('Error fetching table order history:', error);
+    res.status(500).json({ 
+      error: 'Failed to fetch table order history',
       message: error.message 
     });
   }
