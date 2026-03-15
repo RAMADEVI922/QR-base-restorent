@@ -1,0 +1,436 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Responsive Design Validation - QR Restaurant</title>
+  <link rel="stylesheet" href="src/frontend/styles.css">
+  <style>
+    .viewport-info {
+      position: fixed;
+      top: 10px;
+      right: 10px;
+      background: rgba(0, 0, 0, 0.9);
+      color: white;
+      padding: 15px;
+      border-radius: 8px;
+      font-size: 14px;
+      z-index: 9999;
+      font-family: monospace;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+    }
+    .viewport-info h4 {
+      margin: 0 0 10px 0;
+      font-size: 16px;
+      color: #4CAF50;
+    }
+    .viewport-info .category {
+      color: #FFC107;
+      font-weight: bold;
+    }
+    .test-controls {
+      position: fixed;
+      bottom: 10px;
+      left: 10px;
+      background: rgba(0, 0, 0, 0.9);
+      color: white;
+      padding: 15px;
+      border-radius: 8px;
+      z-index: 9999;
+    }
+    .test-controls button {
+      margin: 5px;
+      padding: 8px 15px;
+      background: #3498db;
+      color: white;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 12px;
+    }
+    .test-controls button:hover {
+      background: #2980b9;
+    }
+  </style>
+</head>
+<body>
+  <div class="viewport-info">
+    <h4>📱 Viewport Info</h4>
+    <div>Width: <span id="screen-width"></span>px</div>
+    <div>Height: <span id="screen-height"></span>px</div>
+    <div>Category: <span class="category" id="device-category"></span></div>
+    <div>Orientation: <span id="orientation"></span></div>
+  </div>
+
+  <div class="test-controls">
+    <h4 style="margin: 0 0 10px 0; font-size: 14px;">Test Views:</h4>
+    <button onclick="showPage('menu')">Menu Page</button>
+    <button onclick="showPage('queue')">Order Queue</button>
+    <button onclick="showPage('dashboard')">Dashboard</button>
+    <button onclick="showPage('tables')">Tables</button>
+  </div>
+
+  <div id="app">
+    <!-- Navigation -->
+    <nav id="navigation" class="navigation">
+      <div class="nav-container">
+        <h1 class="logo">QR Restaurant</h1>
+        <ul class="nav-links">
+          <li><a href="#" class="nav-link active" data-page="menu">Menu</a></li>
+          <li><a href="#" class="nav-link" data-page="queue">Order Queue</a></li>
+          <li><a href="#" class="nav-link" data-page="dashboard">Dashboard</a></li>
+          <li><a href="#" class="nav-link" data-page="tables">Tables</a></li>
+          <li><a href="#" class="nav-link" data-page="menu-management">Menu Mgmt</a></li>
+        </ul>
+      </div>
+    </nav>
+
+    <!-- Page Container -->
+    <main class="page-container">
+      <!-- Menu Page -->
+      <section id="menu-page" class="page">
+        <header class="page-header">
+          <h2>Menu</h2>
+          <p class="page-description">Select items to add to your order</p>
+          <p class="table-info">Table 5</p>
+        </header>
+
+        <div class="menu-items">
+          <div class="menu-item">
+            <div class="menu-item-content">
+              <div class="menu-item-header">
+                <h3 class="menu-item-name">Margherita Pizza</h3>
+                <span class="menu-item-price">$12.99</span>
+              </div>
+              <p class="menu-item-description">Fresh mozzarella, tomato sauce, and basil on a crispy crust</p>
+            </div>
+            <div class="menu-item-actions">
+              <button class="add-to-order-btn">Add to Order</button>
+            </div>
+          </div>
+
+          <div class="menu-item">
+            <div class="menu-item-content">
+              <div class="menu-item-header">
+                <h3 class="menu-item-name">Caesar Salad</h3>
+                <span class="menu-item-price">$8.99</span>
+              </div>
+              <p class="menu-item-description">Romaine lettuce, parmesan, croutons, Caesar dressing</p>
+            </div>
+            <div class="menu-item-actions">
+              <button class="add-to-order-btn">Add to Order</button>
+            </div>
+          </div>
+
+          <div class="menu-item">
+            <div class="menu-item-content">
+              <div class="menu-item-header">
+                <h3 class="menu-item-name">Grilled Salmon</h3>
+                <span class="menu-item-price">$18.99</span>
+              </div>
+              <p class="menu-item-description">Fresh Atlantic salmon with seasonal vegetables and lemon butter</p>
+            </div>
+            <div class="menu-item-actions">
+              <button class="add-to-order-btn">Add to Order</button>
+            </div>
+          </div>
+
+          <div class="menu-item">
+            <div class="menu-item-content">
+              <div class="menu-item-header">
+                <h3 class="menu-item-name">Pasta Carbonara</h3>
+                <span class="menu-item-price">$14.99</span>
+              </div>
+              <p class="menu-item-description">Creamy pasta with bacon, eggs, and parmesan cheese</p>
+            </div>
+            <div class="menu-item-actions">
+              <button class="add-to-order-btn">Add to Order</button>
+            </div>
+          </div>
+
+          <div class="menu-item">
+            <div class="menu-item-content">
+              <div class="menu-item-header">
+                <h3 class="menu-item-name">Beef Burger</h3>
+                <span class="menu-item-price">$11.99</span>
+              </div>
+              <p class="menu-item-description">Juicy beef patty with lettuce, tomato, and special sauce</p>
+            </div>
+            <div class="menu-item-actions">
+              <button class="add-to-order-btn">Add to Order</button>
+            </div>
+          </div>
+
+          <div class="menu-item">
+            <div class="menu-item-content">
+              <div class="menu-item-header">
+                <h3 class="menu-item-name">Chocolate Cake</h3>
+                <span class="menu-item-price">$6.99</span>
+              </div>
+              <p class="menu-item-description">Rich chocolate cake with chocolate ganache</p>
+            </div>
+            <div class="menu-item-actions">
+              <button class="add-to-order-btn">Add to Order</button>
+            </div>
+          </div>
+        </div>
+
+        <aside class="order-summary">
+          <h3>Your Order</h3>
+          <div class="summary-items">
+            <div class="summary-item">
+              <span class="summary-item-name">Margherita Pizza x1</span>
+              <span class="summary-item-price">$12.99</span>
+            </div>
+            <div class="summary-item">
+              <span class="summary-item-name">Caesar Salad x1</span>
+              <span class="summary-item-price">$8.99</span>
+            </div>
+          </div>
+          <div class="summary-total">
+            <strong>Total: $21.98</strong>
+          </div>
+          <button class="btn btn-primary">Submit Order</button>
+        </aside>
+      </section>
+
+      <!-- Order Queue Page -->
+      <section id="queue-page" class="page hidden">
+        <header class="page-header">
+          <h2>Order Queue</h2>
+          <p class="page-description">Active orders awaiting preparation and service</p>
+        </header>
+
+        <div class="orders-queue">
+          <div class="order-card pending">
+            <div class="order-header">
+              <h3 class="order-id">Order #1234</h3>
+              <span class="order-status status-pending">Pending</span>
+            </div>
+            <div class="order-info">
+              <span class="order-table">Table 5</span>
+              <span class="order-time">2 minutes ago</span>
+            </div>
+            <div class="order-items">
+              <div class="order-item">
+                <span class="item-name">Margherita Pizza</span>
+                <span class="item-quantity">x1</span>
+              </div>
+              <div class="order-item">
+                <span class="item-name">Caesar Salad</span>
+                <span class="item-quantity">x1</span>
+              </div>
+            </div>
+            <div class="order-total">Total: $21.98</div>
+            <div class="order-controls">
+              <button class="btn btn-primary status-btn">Mark Preparing</button>
+            </div>
+          </div>
+
+          <div class="order-card preparing">
+            <div class="order-header">
+              <h3 class="order-id">Order #1233</h3>
+              <span class="order-status status-preparing">Preparing</span>
+            </div>
+            <div class="order-info">
+              <span class="order-table">Table 3</span>
+              <span class="order-time">5 minutes ago</span>
+            </div>
+            <div class="order-items">
+              <div class="order-item">
+                <span class="item-name">Grilled Salmon</span>
+                <span class="item-quantity">x2</span>
+              </div>
+            </div>
+            <div class="order-total">Total: $37.98</div>
+            <div class="order-controls">
+              <button class="btn btn-danger status-btn">Mark Ready</button>
+            </div>
+          </div>
+
+          <div class="order-card ready">
+            <div class="order-header">
+              <h3 class="order-id">Order #1232</h3>
+              <span class="order-status status-ready">Ready</span>
+            </div>
+            <div class="order-info">
+              <span class="order-table">Table 7</span>
+              <span class="order-time">8 minutes ago</span>
+            </div>
+            <div class="order-items">
+              <div class="order-item">
+                <span class="item-name">Pasta Carbonara</span>
+                <span class="item-quantity">x1</span>
+              </div>
+              <div class="order-item">
+                <span class="item-name">Beef Burger</span>
+                <span class="item-quantity">x1</span>
+              </div>
+            </div>
+            <div class="order-total">Total: $26.98</div>
+            <div class="order-controls">
+              <button class="btn btn-success status-btn">Mark Served</button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Dashboard Page -->
+      <section id="dashboard-page" class="page hidden">
+        <header class="page-header">
+          <h2>Dashboard</h2>
+          <p class="page-description">Real-time system overview and metrics</p>
+        </header>
+
+        <div class="metrics-grid">
+          <div class="metric-card">
+            <h3>Active Tables</h3>
+            <p class="metric-value">12</p>
+          </div>
+          <div class="metric-card">
+            <h3>Pending Orders</h3>
+            <p class="metric-value">3</p>
+          </div>
+          <div class="metric-card">
+            <h3>Preparing Orders</h3>
+            <p class="metric-value">5</p>
+          </div>
+          <div class="metric-card">
+            <h3>Ready Orders</h3>
+            <p class="metric-value">2</p>
+          </div>
+          <div class="metric-card">
+            <h3>Served Orders</h3>
+            <p class="metric-value">8</p>
+          </div>
+          <div class="metric-card metric-card-highlight">
+            <h3>Total Revenue</h3>
+            <p class="metric-value">$487.50</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- Tables Page -->
+      <section id="tables-page" class="page hidden">
+        <header class="page-header">
+          <h2>Tables Management</h2>
+          <p class="page-description">Manage restaurant tables and QR codes</p>
+        </header>
+
+        <div class="action-bar">
+          <button class="btn btn-primary">+ Create New Table</button>
+        </div>
+
+        <div class="tables-list">
+          <div class="table-card">
+            <h3>Table 1</h3>
+            <div class="table-qr">
+              <div style="width: 150px; height: 150px; background: #f0f0f0; display: flex; align-items: center; justify-content: center; margin: 0 auto;">QR Code</div>
+            </div>
+            <span class="table-status active">Active</span>
+            <div class="table-controls">
+              <button class="btn btn-secondary">View</button>
+              <button class="btn btn-danger">Delete</button>
+            </div>
+          </div>
+
+          <div class="table-card">
+            <h3>Table 2</h3>
+            <div class="table-qr">
+              <div style="width: 150px; height: 150px; background: #f0f0f0; display: flex; align-items: center; justify-content: center; margin: 0 auto;">QR Code</div>
+            </div>
+            <span class="table-status active">Active</span>
+            <div class="table-controls">
+              <button class="btn btn-secondary">View</button>
+              <button class="btn btn-danger">Delete</button>
+            </div>
+          </div>
+
+          <div class="table-card">
+            <h3>Table 3</h3>
+            <div class="table-qr">
+              <div style="width: 150px; height: 150px; background: #f0f0f0; display: flex; align-items: center; justify-content: center; margin: 0 auto;">QR Code</div>
+            </div>
+            <span class="table-status active">Active</span>
+            <div class="table-controls">
+              <button class="btn btn-secondary">View</button>
+              <button class="btn btn-danger">Delete</button>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <script>
+    function updateViewportInfo() {
+      const width = window.innerWidth;
+      const height = window.innerHeight;
+      const orientation = width > height ? 'Landscape' : 'Portrait';
+      
+      let category = '';
+      if (width < 480) {
+        category = 'Extra Small Mobile (320-479px)';
+      } else if (width < 768) {
+        category = 'Mobile (480-767px)';
+      } else if (width < 1024) {
+        category = 'Tablet (768-1023px)';
+      } else if (width < 1440) {
+        category = 'Desktop (1024-1439px)';
+      } else if (width < 1920) {
+        category = 'Large Desktop (1440-1919px)';
+      } else {
+        category = 'Extra Large Desktop (1920px+)';
+      }
+      
+      document.getElementById('screen-width').textContent = width;
+      document.getElementById('screen-height').textContent = height;
+      document.getElementById('device-category').textContent = category;
+      document.getElementById('orientation').textContent = orientation;
+    }
+
+    function showPage(pageId) {
+      // Hide all pages
+      document.querySelectorAll('.page').forEach(page => {
+        page.classList.add('hidden');
+      });
+      
+      // Show selected page
+      const pageMap = {
+        'menu': 'menu-page',
+        'queue': 'queue-page',
+        'dashboard': 'dashboard-page',
+        'tables': 'tables-page'
+      };
+      
+      const targetPage = document.getElementById(pageMap[pageId]);
+      if (targetPage) {
+        targetPage.classList.remove('hidden');
+      }
+      
+      // Update nav links
+      document.querySelectorAll('.nav-link').forEach(link => {
+        link.classList.remove('active');
+        if (link.dataset.page === pageId) {
+          link.classList.add('active');
+        }
+      });
+    }
+
+    // Initialize
+    updateViewportInfo();
+    window.addEventListener('resize', updateViewportInfo);
+    
+    // Add click handlers to nav links
+    document.querySelectorAll('.nav-link').forEach(link => {
+      link.addEventListener('click', (e) => {
+        e.preventDefault();
+        const page = link.dataset.page;
+        if (page) {
+          showPage(page);
+        }
+      });
+    });
+  </script>
+</body>
+</html>

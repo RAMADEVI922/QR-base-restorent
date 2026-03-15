@@ -2,7 +2,6 @@
   {
     "id": "order-1",
     "tableId": "table-1",
-    "items": [],
     "status": "served",
     "totalPrice": 1000,
     "createdAt": 1773556824277,
@@ -13,7 +12,6 @@
   {
     "id": "order-2",
     "tableId": "table-2",
-    "items": [],
     "status": "served",
     "totalPrice": 2000,
     "createdAt": 1773556824277,
@@ -24,7 +22,6 @@
   {
     "id": "817564c4-ab34-4180-a9e1-34003db40432",
     "tableId": "table-1",
-    "items": [],
     "status": "pending",
     "totalPrice": 0,
     "createdAt": 1773556825279,
@@ -35,7 +32,6 @@
   {
     "id": "dacca451-f1a4-42fa-8e10-cd7a09145fb0",
     "tableId": "table-2",
-    "items": [],
     "status": "pending",
     "totalPrice": 0,
     "createdAt": 1773556825283,

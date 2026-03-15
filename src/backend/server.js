@@ -7,7 +7,8 @@ import {
   getAllTables, 
   getTableById, 
   updateTableStatus, 
-  deleteTable 
+  deleteTable,
+  getTableOrderHistory
 } from './tableService.js';
 import { generateQRCode } from './qrCodeGenerator.js';
 import {
@@ -32,6 +33,7 @@ import {
 } from './metricsService.js';
 import { initializeWebSocketServer, broadcastEvent } from './websocketServer.js';
 import { broadcastMetricsUpdate } from './metricsUpdateBroadcaster.js';
+import dataValidator from './dataValidator.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -43,6 +45,13 @@ const httpServer = createServer(app);
 // Middleware
 app.use(express.json());
 app.use(express.static(path.join(__dirname, '../frontend')));
+
+// Validation error handler middleware
+const handleValidationError = (validation, res) => {
+  if (!validation.valid) {
+    return res.status(400).json(dataValidator.createValidationErrorResponse(validation.errors));
+  }
+};
 
 // Health check endpoint
 app.get('/api/health', (req, res) => {
@@ -57,12 +66,14 @@ app.get('/api/health', (req, res) => {
  */
 app.post('/api/tables', async (req, res) => {
   try {
-    const { tableId } = req.body;
+    // Sanitize input
+    const sanitizedBody = dataValidator.sanitizeObject(req.body);
+    const { tableId } = sanitizedBody;
     
-    if (!tableId || typeof tableId !== 'string') {
-      return res.status(400).json({ 
-        error: 'Table ID is required and must be a string' 
-      });
+    // Validate table ID
+    const idValidation = dataValidator.validateId(tableId, 'Table');
+    if (!idValidation.valid) {
+      return res.status(400).json(dataValidator.createValidationErrorResponse(idValidation.errors));
     }
 
     // Generate QR code for the table
@@ -196,6 +207,35 @@ app.put('/api/tables/:id', async (req, res) => {
 });
 
 /**
+ * GET /api/tables/:id/orders - Get order history for a table
+ * Requirements: 8.5
+ */
+app.get('/api/tables/:id/orders', async (req, res) => {
+  try {
+    const { id } = req.params;
+    
+    // Check if table exists
+    const existingTable = await getTableById(id);
+    if (!existingTable) {
+      return res.status(404).json({ 
+        error: 'Table not found' 
+      });
+    }
+    
+    // Get order history for the table
+    const orders = await getTableOrderHistory(id);
+    
+    res.json(orders);
+  } catch (error) {
+    console.error('Error fetching table order history:', error);
+    res.status(500).json({ 
+      error: 'Failed to fetch table order history',
+      message: error.message 
+    });
+  }
+});
+
+/**
  * DELETE /api/tables/:id - Delete table (soft delete)
  * Requirements: 8.3
  */
@@ -228,30 +268,20 @@ app.delete('/api/tables/:id', async (req, res) => {
 
 /**
  * POST /api/menu-items - Create a new menu item
- * Requirements: 9.1
+ * Requirements: 9.1, 10.3, 10.4
  */
 app.post('/api/menu-items', async (req, res) => {
   try {
-    const { name, description, price } = req.body;
+    // Sanitize input
+    const sanitizedBody = dataValidator.sanitizeObject(req.body);
     
-    if (!name || typeof name !== 'string') {
-      return res.status(400).json({ 
-        error: 'Name is required and must be a string' 
-      });
+    // Validate menu item data
+    const validation = dataValidator.validateMenuItem(sanitizedBody);
+    if (!validation.valid) {
+      return res.status(400).json(dataValidator.createValidationErrorResponse(validation.errors));
     }
     
-    if (description === undefined || typeof description !== 'string') {
-      return res.status(400).json({ 
-        error: 'Description is required and must be a string' 
-      });
-    }
-    
-    if (price === undefined || typeof price !== 'number' || price < 0) {
-      return res.status(400).json({ 
-        error: 'Price is required and must be a non-negative number' 
-      });
-    }
-    
+    const { name, description, price } = sanitizedBody;
     const menuItem = await createMenuItem(name, description, price);
     
     res.status(201).json(menuItem);
@@ -425,45 +455,20 @@ app.get('/api/metrics', async (req, res) => {
 
 /**
  * POST /api/orders - Create a new order
- * Requirements: 3.1, 3.2, 3.3, 3.4
+ * Requirements: 3.1, 3.2, 3.3, 3.4, 10.1, 10.2
  */
 app.post('/api/orders', async (req, res) => {
   try {
-    const { tableId, items } = req.body;
+    // Sanitize input
+    const sanitizedBody = dataValidator.sanitizeObject(req.body);
     
-    if (!tableId || typeof tableId !== 'string') {
-      return res.status(400).json({ 
-        error: 'Table ID is required and must be a string' 
-      });
+    // Validate order data
+    const validation = dataValidator.validateOrder(sanitizedBody);
+    if (!validation.valid) {
+      return res.status(400).json(dataValidator.createValidationErrorResponse(validation.errors));
     }
     
-    if (!items || !Array.isArray(items)) {
-      return res.status(400).json({ 
-        error: 'Items are required and must be an array' 
-      });
-    }
-    
-    // Validate each item has required fields
-    for (const item of items) {
-      if (!item.menuItemId || !item.name || typeof item.quantity !== 'number' || typeof item.price !== 'number') {
-        return res.status(400).json({ 
-          error: 'Each item must have menuItemId, name, quantity, and price' 
-        });
-      }
-      
-      if (item.quantity <= 0) {
-        return res.status(400).json({ 
-          error: 'Item quantity must be greater than 0' 
-        });
-      }
-      
-      if (item.price < 0) {
-        return res.status(400).json({ 
-          error: 'Item price must be non-negative' 
-        });
-      }
-    }
-    
+    const { tableId, items } = sanitizedBody;
     const order = await createOrder(tableId, items);
     
     // Broadcast new order creation to kitchen queue
@@ -595,13 +600,17 @@ app.put('/api/orders/:id', async (req, res) => {
 
 /**
  * PUT /api/orders/:id/status - Update order status
- * Requirements: 4.3, 4.4, 5.2
+ * Requirements: 4.3, 4.4, 5.2, 10.1, 10.2
  */
 app.put('/api/orders/:id/status', async (req, res) => {
   try {
     const { id } = req.params;
-    const { status } = req.body;
     
+    // Sanitize input
+    const sanitizedBody = dataValidator.sanitizeObject(req.body);
+    const { status } = sanitizedBody;
+    
+    // Validate status
     if (!status || typeof status !== 'string') {
       return res.status(400).json({ 
         error: 'Status is required and must be a string' 
@@ -614,6 +623,12 @@ app.put('/api/orders/:id/status', async (req, res) => {
       return res.status(404).json({ 
         error: 'Order not found' 
       });
+    }
+    
+    // Validate status transition
+    const transitionValidation = dataValidator.validateStatusTransition(existingOrder.status, status);
+    if (!transitionValidation.valid) {
+      return res.status(400).json(dataValidator.createValidationErrorResponse(transitionValidation.errors));
     }
     
     // Update order status

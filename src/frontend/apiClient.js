@@ -7,7 +7,12 @@
  * - Proper error handling for 4xx and 5xx responses
  * - Promise-based async operations
  * - Configurable retry attempts and delays
+ * - Integration with ErrorHandler for user-friendly error messages
+ * 
+ * Requirements: 10.1, 10.2
  */
+
+import errorHandler from './errorHandler.js';
 
 class ApiClient {
   constructor(config = {}) {
@@ -15,6 +20,7 @@ class ApiClient {
     this.maxRetries = config.maxRetries || 3;
     this.initialRetryDelay = config.initialRetryDelay || 1000; // 1 second
     this.maxRetryDelay = config.maxRetryDelay || 10000; // 10 seconds
+    this.errorHandler = config.errorHandler || errorHandler;
   }
 
   /**
@@ -83,12 +89,14 @@ class ApiClient {
 
   /**
    * Core request method with retry logic and error handling
+   * Requirements: 10.1, 10.2
    * @param {string} url - The endpoint URL
    * @param {Object} options - Fetch options
    * @returns {Promise<any>} Response data
    */
   async request(url, options = {}) {
     const fullUrl = this.baseUrl + url;
+    const operation = `${options.method || 'GET'} ${url}`;
     let lastError;
 
     for (let attempt = 0; attempt <= this.maxRetries; attempt++) {
@@ -97,12 +105,27 @@ class ApiClient {
 
         // Handle successful responses (2xx)
         if (response.ok) {
+          // Reset retry attempts on success
+          if (this.errorHandler) {
+            this.errorHandler.resetRetries(operation);
+          }
           return await this.parseResponse(response);
         }
 
         // Handle client errors (4xx) - don't retry
         if (response.status >= 400 && response.status < 500) {
-          throw await this.createHttpError(response);
+          const error = await this.createHttpError(response);
+          
+          // Handle error with error handler
+          if (this.errorHandler && options.showErrors !== false) {
+            this.errorHandler.handleApiError(error, {
+              operation,
+              showToUser: true,
+              allowRetry: false
+            });
+          }
+          
+          throw error;
         }
 
         // Handle server errors (5xx) - retry
@@ -115,10 +138,25 @@ class ApiClient {
             continue;
           }
           
+          // Handle error with error handler on final attempt
+          if (this.errorHandler && options.showErrors !== false) {
+            this.errorHandler.handleApiError(lastError, {
+              operation,
+              showToUser: true,
+              allowRetry: false,
+              maxRetries: this.maxRetries
+            });
+          }
+          
           throw lastError;
         }
 
       } catch (error) {
+        // If error was already thrown from client error handling, re-throw
+        if (error.status >= 400 && error.status < 500) {
+          throw error;
+        }
+
         // Network errors or other exceptions
         if (this.isRetryableError(error)) {
           lastError = error;
@@ -127,6 +165,16 @@ class ApiClient {
           if (attempt < this.maxRetries) {
             await this.delay(this.calculateRetryDelay(attempt));
             continue;
+          }
+          
+          // Handle error with error handler on final attempt
+          if (this.errorHandler && options.showErrors !== false) {
+            this.errorHandler.handleApiError(lastError, {
+              operation,
+              showToUser: true,
+              allowRetry: true,
+              maxRetries: this.maxRetries
+            });
           }
         }
         
